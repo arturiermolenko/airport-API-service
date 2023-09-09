@@ -40,3 +40,8 @@ class Route(models.Model):
     def __str__(self):
         return (f"{self.source}({self.source.city}) - "
                 f"{self.destination}({self.destination.city})")
+
+    @property
+    def code(self):
+        return f"{self.source[:3].capitalize()} - " \
+               f"{self.destination[:3].capitalize()}"
