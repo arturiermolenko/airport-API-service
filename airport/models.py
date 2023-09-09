@@ -20,6 +20,7 @@ class City(models.Model):
 
 class Airport(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    airport_code = models.CharField(max_length=3, unique=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -49,5 +50,5 @@ class Route(models.Model):
     @property
     @extend_schema_field(OpenApiTypes.STR)
     def code(self):
-        return f"{str(self.source)[:3].upper()} - " \
-               f"{str(self.destination)[:3].upper()}"
+        return (f"{self.source.airport_code} - "
+                f"{self.destination.airport_code}")
