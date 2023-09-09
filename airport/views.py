@@ -1,3 +1,4 @@
+from drf_spectacular.utils import OpenApiParameter, extend_schema_field
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
@@ -12,7 +13,7 @@ from .serializers import (
     CountrySerializer,
     CitySerializer,
     AirportSerializer,
-    RouteSerializer
+    RouteSerializer, RouteDetailSerializer, AirportCreateSerializer, RouteListSerializer
 )
 
 
@@ -56,12 +57,39 @@ class AirportViewSet(
     serializer_class = AirportSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
+    def get_queryset(self):
+        city = self.request.query_params.get("city")
+        queryset = self.queryset
+
+        if city:
+            queryset = queryset.filter(
+                city__name__icontains=city
+            )
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return AirportCreateSerializer
+
+        return AirportSerializer
+
 
 class RouteViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
     GenericViewSet
 ):
     queryset = Route.objects.select_related("destination__city", "source__city")
     serializer_class = RouteSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return RouteListSerializer
+
+        if self.action == "retrieve":
+            return RouteDetailSerializer
+
+        return RouteSerializer

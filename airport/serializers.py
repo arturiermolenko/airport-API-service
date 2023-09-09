@@ -21,6 +21,17 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class AirportSerializer(serializers.ModelSerializer):
+    city_name = serializers.CharField(
+        source="city.name",
+        read_only=True
+    )
+
+    class Meta:
+        model = Airport
+        fields = ("id", "name", "city_name")
+
+
+class AirportCreateSerializer(AirportSerializer):
     class Meta:
         model = Airport
         fields = ("id", "name", "city")
@@ -29,4 +40,34 @@ class AirportSerializer(serializers.ModelSerializer):
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ("id", "code", "source", "destination")
+        fields = ("id", "code", "source", "destination", "distance")
+
+
+class RouteListSerializer(RouteSerializer):
+    source_name = serializers.CharField(
+        source="source.name",
+        read_only=True
+    )
+    destination_name = serializers.CharField(
+        source="destination.name",
+        read_only=True
+    )
+
+    class Meta:
+        model = Route
+        fields = (
+            "id",
+            "code",
+            "source_name",
+            "destination_name",
+            "distance"
+        )
+
+
+class RouteDetailSerializer(RouteSerializer):
+    source = AirportSerializer(many=False, read_only=True)
+    destination = AirportSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Route
+        fields = ("id", "code", "source", "destination", "distance")

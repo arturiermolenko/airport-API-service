@@ -1,4 +1,6 @@
 from django.db import models
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 
 class Country(models.Model):
@@ -37,11 +39,15 @@ class Route(models.Model):
     )
     distance = models.IntegerField()
 
+    class Meta:
+        unique_together = ("source", "destination")
+
     def __str__(self):
         return (f"{self.source}({self.source.city}) - "
                 f"{self.destination}({self.destination.city})")
 
     @property
+    @extend_schema_field(OpenApiTypes.STR)
     def code(self):
-        return f"{self.source[:3].capitalize()} - " \
-               f"{self.destination[:3].capitalize()}"
+        return f"{str(self.source)[:3].upper()} - " \
+               f"{str(self.destination)[:3].upper()}"
