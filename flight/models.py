@@ -59,7 +59,7 @@ class Flight(models.Model):
         ordering = ["departure_time"]
 
     def __str__(self):
-        return f"{self.route}, airplane: {self.airplane}"
+        return self.route.code
 
 
 class Order(models.Model):

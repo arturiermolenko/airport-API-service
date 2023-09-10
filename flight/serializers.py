@@ -65,7 +65,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    flight = FlightListSerializer(many=False, read_only=True)
+    flight = serializers.StringRelatedField(many=False, read_only=True)
     meal = serializers.CharField(
         source="meal.meal",
         read_only=True
