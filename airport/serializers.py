@@ -10,25 +10,25 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
-    country_name = serializers.CharField(
-        source="country.name",
+    country = serializers.StringRelatedField(
+        many=False,
         read_only=True
     )
 
     class Meta:
         model = City
-        fields = ("id", "name", "country_name")
+        fields = ("id", "name", "country")
 
 
 class AirportSerializer(serializers.ModelSerializer):
-    city_name = serializers.CharField(
-        source="city.name",
-        read_only=True
+    city = serializers.StringRelatedField(
+        many=False,
+        read_only=True,
     )
 
     class Meta:
         model = Airport
-        fields = ("id", "name", "city_name")
+        fields = ("id", "name", "city")
 
 
 class AirportCreateSerializer(AirportSerializer):

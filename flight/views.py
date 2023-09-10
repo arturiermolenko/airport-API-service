@@ -1,4 +1,5 @@
 from rest_framework import mixins, viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
@@ -21,7 +22,11 @@ class CrewViewSet(
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = (
         Flight.objects.
-        select_related("route", "airplane").
+        select_related(
+            "route__source__city",
+            "airplane",
+            "route__destination__city"
+        ).
         prefetch_related("crew_members")
     )
     serializer_class = FlightSerializer
@@ -37,14 +42,20 @@ class FlightViewSet(viewsets.ModelViewSet):
         return FlightSerializer
 
 
+class OrderPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
 class OrderViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     GenericViewSet
 ):
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = OrderPagination
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
@@ -54,3 +65,6 @@ class OrderViewSet(
             return OrderListSerializer
 
         return OrderSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

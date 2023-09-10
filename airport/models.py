@@ -24,7 +24,7 @@ class City(models.Model):
         ordering = ["country"]
 
     def __str__(self):
-        return f"{self.country}: {self.name}"
+        return self.name
 
 
 class Airport(models.Model):
@@ -36,7 +36,7 @@ class Airport(models.Model):
         ordering = ["city"]
 
     def __str__(self):
-        return f"{self.city}: {self.name}"
+        return self.name
 
 
 class Route(models.Model):
@@ -61,5 +61,5 @@ class Route(models.Model):
     @property
     @extend_schema_field(OpenApiTypes.STR)
     def code(self):
-        return (f"{self.source.airport_code} - "
-                f"{self.destination.airport_code}")
+        return (f"{self.source.city}: {self.source.airport_code} - "
+                f"{self.destination.city}: {self.destination.airport_code}")

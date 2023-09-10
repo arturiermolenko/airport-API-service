@@ -85,7 +85,7 @@ class RouteViewSet(
 ):
     queryset = Route.objects.select_related(
         "destination__city",
-        "source__city"
+        "source__city",
     )
     serializer_class = RouteSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)

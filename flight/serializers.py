@@ -10,22 +10,23 @@ from .models import Crew, Flight, Ticket, Order
 class CrewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crew
-        fields = ("id", "first_name", "last_name", "position")
+        fields = ("id", "full_name", "position")
 
 
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = "__all__"
+        fields = ("id",)
 
 
 class FlightListSerializer(FlightSerializer):
-    route_code = serializers.CharField(
-        source="route.code",
-        read_only=True
+    route = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field="code"
     )
-    airplane_name = serializers.CharField(
-        source="airplane.name",
+    airplane = serializers.StringRelatedField(
+        many=False,
         read_only=True
     )
 
@@ -33,8 +34,8 @@ class FlightListSerializer(FlightSerializer):
         model = Flight
         fields = (
             "id",
-            "route_code",
-            "airplane_name",
+            "route",
+            "airplane",
             "departure_time",
             "arrival_time"
         )
@@ -65,6 +66,21 @@ class TicketSerializer(serializers.ModelSerializer):
 
 class TicketListSerializer(TicketSerializer):
     flight = FlightListSerializer(many=False, read_only=True)
+    meal = serializers.CharField(
+        source="meal.meal",
+        read_only=True
+    )
+
+    class Meta:
+        model = Ticket
+        fields = (
+            "id",
+            "row",
+            "seat",
+            "flight",
+            "ticket_class",
+            "meal"
+        )
 
 
 class TicketSeatsSerializer(TicketSerializer):
