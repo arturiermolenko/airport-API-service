@@ -9,6 +9,12 @@ from django.conf import settings
 class Crew(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = "crew_member"
+        verbose_name_plural = "crew_members"
+        ordering = ["position"]
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -19,9 +25,9 @@ class Crew(models.Model):
 
 
 class Meal(models.Model):
-    STANDARD = "ST"
-    VEGETARIAN = "VE"
-    NO_MEAL = "NO"
+    STANDARD = "STANDARD"
+    VEGETARIAN = "VEGETARIAN"
+    NO_MEAL = "NO_MEAL"
     MEAL_CHOICES = [
         (STANDARD, "Standard"),
         (VEGETARIAN, "Vegetarian"),
@@ -29,7 +35,7 @@ class Meal(models.Model):
     ]
 
     meal = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=MEAL_CHOICES,
         default=STANDARD
     )
@@ -71,8 +77,8 @@ class Order(models.Model):
 
 
 class Ticket(models.Model):
-    ECONOMY = "ECO"
-    BUSINESS = "BSC"
+    ECONOMY = "ECONOMY"
+    BUSINESS = "BUSINESS"
     CLASS_CHOICES = [
         (ECONOMY, "Economy"),
         (BUSINESS, "Business")
@@ -86,7 +92,7 @@ class Ticket(models.Model):
         Order, on_delete=models.CASCADE, related_name="tickets"
     )
     ticket_class = models.CharField(
-        max_length=3,
+        max_length=8,
         choices=CLASS_CHOICES,
         default=ECONOMY
     )
@@ -137,5 +143,3 @@ class Ticket(models.Model):
                 f"(row: {self.row}, "
                 f"seat: {self.seat}, "
                 f"meal: {self.meal}")
-
-

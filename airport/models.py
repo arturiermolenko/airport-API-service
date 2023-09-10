@@ -6,6 +6,10 @@ from drf_spectacular.utils import extend_schema_field
 class Country(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    class Meta:
+        verbose_name = "country"
+        verbose_name_plural = "countries"
+
     def __str__(self):
         return self.name
 
@@ -13,6 +17,11 @@ class Country(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=255, unique=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "city"
+        verbose_name_plural = "cities"
+        ordering = ["country"]
 
     def __str__(self):
         return f"{self.country}: {self.name}"
@@ -23,8 +32,11 @@ class Airport(models.Model):
     airport_code = models.CharField(max_length=3, unique=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ["city"]
+
     def __str__(self):
-        return self.name
+        return f"{self.city}: {self.name}"
 
 
 class Route(models.Model):
@@ -44,8 +56,7 @@ class Route(models.Model):
         unique_together = ("source", "destination")
 
     def __str__(self):
-        return (f"{self.source}({self.source.city}) - "
-                f"{self.destination}({self.destination.city})")
+        return f"{self.source} - {self.destination}"
 
     @property
     @extend_schema_field(OpenApiTypes.STR)

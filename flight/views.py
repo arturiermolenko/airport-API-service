@@ -1,9 +1,11 @@
-from rest_framework import mixins
+from rest_framework import mixins, viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Crew, Flight
+from .models import Crew, Flight, Order
 from .permissions import IsAdminOrIfAuthenticatedReadOnly
-from .serializers import CrewSerializer, FlightSerializer, FlightListSerializer
+from .serializers import CrewSerializer, FlightSerializer, FlightListSerializer, OrderSerializer, OrderListSerializer, \
+    FlightDetailSerializer
 
 
 class CrewViewSet(
@@ -16,11 +18,7 @@ class CrewViewSet(
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
-class FlightViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    GenericViewSet
-):
+class FlightViewSet(viewsets.ModelViewSet):
     queryset = (
         Flight.objects.
         select_related("route", "airplane").
@@ -33,12 +31,26 @@ class FlightViewSet(
         if self.action == "list":
             return FlightListSerializer
 
+        if self.action == "retrieve":
+            return FlightDetailSerializer
+
         return FlightSerializer
 
 
-class TicketViewSet:
-    pass
+class OrderViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
 
-class OrderViewSet:
-    pass
+    def get_serializer_class(self):
+        if self.action == "list":
+            return OrderListSerializer
+
+        return OrderSerializer
