@@ -21,7 +21,7 @@ class AirplaneViewSet(
     mixins.ListModelMixin,
     GenericViewSet
 ):
-    queryset = Airplane.objects.select_related("airplane_type")
+    queryset = Airplane.objects.select_related("airplane_type", "airline")
     serializer_class = AirplaneSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 

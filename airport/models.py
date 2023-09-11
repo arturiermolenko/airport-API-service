@@ -24,7 +24,7 @@ class City(models.Model):
         ordering = ["country"]
 
     def __str__(self):
-        return self.name
+        return f"{self.country.name}: {self.name}"
 
 
 class Airport(models.Model):

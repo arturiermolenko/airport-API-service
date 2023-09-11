@@ -55,13 +55,14 @@ class AirportViewSet(
     mixins.CreateModelMixin,
     GenericViewSet
 ):
-    queryset = Airport.objects.select_related("city")
+    queryset = Airport.objects.select_related("city__country")
     serializer_class = AirportSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_queryset(self):
-        city = self.request.query_params.get("city")
         queryset = self.queryset
+
+        city = self.request.query_params.get("city")
 
         if city:
             queryset = queryset.filter(
@@ -84,8 +85,8 @@ class RouteViewSet(
     GenericViewSet
 ):
     queryset = Route.objects.select_related(
-        "destination__city",
-        "source__city",
+        "destination__city__country",
+        "source__city__country",
     )
     serializer_class = RouteSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)

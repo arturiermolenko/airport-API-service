@@ -67,6 +67,25 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
+    flight = serializers.StringRelatedField(many=False, read_only=True)
+    meal = serializers.CharField(
+        source="meal.meal",
+        read_only=True
+    )
+
+    class Meta:
+        model = Ticket
+        fields = (
+            "id",
+            "row",
+            "seat",
+            "flight",
+            "ticket_class",
+            "meal"
+        )
+
+
+class TicketDetailSerializer(TicketSerializer):
     flight = FlightListSerializer(many=False, read_only=True)
     meal = serializers.CharField(
         source="meal.meal",
@@ -127,3 +146,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderListSerializer(OrderSerializer):
     tickets = TicketListSerializer(many=True, read_only=True)
+
+
+class OrderDetailSerializer(OrderSerializer):
+    tickets = TicketDetailSerializer(many=True, read_only=True)

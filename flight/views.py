@@ -12,7 +12,7 @@ from .serializers import (
     FlightListSerializer,
     OrderSerializer,
     OrderListSerializer,
-    FlightDetailSerializer,
+    FlightDetailSerializer, OrderDetailSerializer,
 )
 
 
@@ -25,12 +25,14 @@ class CrewViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = (
         Flight.objects.select_related(
-            "route__source__city", "airplane", "route__destination__city"
+            "route__source__city__country",
+            "airplane",
+            "route__destination__city__country"
         )
         .prefetch_related("crew_members")
         .annotate(
             tickets_available=(
-                F("airplane__rows") * F("airplane__seats_in_row") - Count("ticket")
+                    F("airplane__rows") * F("airplane__seats_in_row") - Count("ticket")
             )
         )
     )
@@ -52,25 +54,33 @@ class OrderPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
+class OrderViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    GenericViewSet
+):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
     pagination_class = OrderPagination
 
     def get_queryset(self):
-        queryset = Order.objects.filter(user=self.request.user)
-
-        if self.action == "list":
-            queryset = queryset.prefetch_related(
-                "tickets__meal",
-                "tickets__flight__route",
-            )
-            return queryset
+        queryset = (Order.objects
+                    .filter(user=self.request.user)
+                    .prefetch_related(
+                        "tickets__meal",
+                        "tickets__flight__route__source__city__country",
+                        "tickets"
+                    ))
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
             return OrderListSerializer
+
+        if self.action == "retrieve":
+            return OrderDetailSerializer
 
         return OrderSerializer
 
