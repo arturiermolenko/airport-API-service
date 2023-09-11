@@ -1,20 +1,22 @@
-from django.db.models import Prefetch
+from django.db.models import F, Count
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Crew, Flight, Order, Ticket
+from .models import Crew, Flight, Order
 from .permissions import IsAdminOrIfAuthenticatedReadOnly
-from .serializers import CrewSerializer, FlightSerializer, FlightListSerializer, OrderSerializer, OrderListSerializer, \
-    FlightDetailSerializer
+from .serializers import (
+    CrewSerializer,
+    FlightSerializer,
+    FlightListSerializer,
+    OrderSerializer,
+    OrderListSerializer,
+    FlightDetailSerializer,
+)
 
 
-class CrewViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    GenericViewSet
-):
+class CrewViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
@@ -22,13 +24,15 @@ class CrewViewSet(
 
 class FlightViewSet(viewsets.ModelViewSet):
     queryset = (
-        Flight.objects.
-        select_related(
-            "route__source__city",
-            "airplane",
-            "route__destination__city"
-        ).
-        prefetch_related("crew_members")
+        Flight.objects.select_related(
+            "route__source__city", "airplane", "route__destination__city"
+        )
+        .prefetch_related("crew_members")
+        .annotate(
+            tickets_available=(
+                F("airplane__rows") * F("airplane__seats_in_row") - Count("ticket")
+            )
+        )
     )
     serializer_class = FlightSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
@@ -48,11 +52,7 @@ class OrderPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class OrderViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    GenericViewSet
-):
+class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
@@ -66,7 +66,7 @@ class OrderViewSet(
                 "tickets__meal",
                 "tickets__flight__route",
             )
-        return queryset
+            return queryset
 
     def get_serializer_class(self):
         if self.action == "list":

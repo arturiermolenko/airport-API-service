@@ -29,6 +29,7 @@ class FlightListSerializer(FlightSerializer):
         many=False,
         read_only=True
     )
+    tickets_available = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Flight
@@ -37,7 +38,8 @@ class FlightListSerializer(FlightSerializer):
             "route",
             "airplane",
             "departure_time",
-            "arrival_time"
+            "arrival_time",
+            "tickets_available"
         )
 
 
@@ -65,7 +67,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    flight = serializers.StringRelatedField(many=False, read_only=True)
+    flight = FlightListSerializer(many=False, read_only=True)
     meal = serializers.CharField(
         source="meal.meal",
         read_only=True
