@@ -3,7 +3,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from flight.permissions import IsAdminOrIfAuthenticatedReadOnly
 from .models import AirplaneType, Airplane
-from .serializers import AirplaneTypeSerializer, AirplaneSerializer
+from .serializers import AirplaneTypeSerializer, AirplaneSerializer, AirplaneListSerializer
 
 
 class AirplaneTypeViewSet(
@@ -33,3 +33,9 @@ class AirplaneViewSet(
             queryset = queryset.filter(name__icontains=name)
 
         return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return AirplaneListSerializer
+
+        return AirplaneSerializer
