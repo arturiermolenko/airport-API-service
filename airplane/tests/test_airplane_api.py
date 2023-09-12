@@ -1,4 +1,5 @@
-from random import randint
+from random import choices
+from string import ascii_lowercase
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -7,7 +8,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from airplane.models import AirplaneType, Airline, Airplane
-from airplane.serializers import AirplaneSerializer, AirplaneListSerializer
+from airplane.serializers import AirplaneListSerializer
 
 AIRPLANE_URL = reverse("airplane:airplane-list")
 
@@ -15,9 +16,10 @@ AIRPLANE_URL = reverse("airplane:airplane-list")
 def sample_airplane(**params):
     airplane_type = AirplaneType.objects.create(name="test_type")
     airline = Airline.objects.create(name="test_airline")
+    suffix = ("".join(choices(ascii_lowercase, k=5)))
 
     defaults = {
-        "name": f"test_name{randint(1, 100000)}",
+        "name": f"test_name_{suffix}",
         "rows": 30,
         "seats_in_row": 8,
         "airplane_type": airplane_type,
@@ -33,8 +35,8 @@ class UnauthenticatedAirplaneApiTests(TestCase):
         self.client = APIClient()
 
     def test_auth_required(self):
-        res = self.client.get(AIRPLANE_URL)
-        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(AIRPLANE_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class AuthenticatedFlightApiTests(TestCase):
@@ -89,7 +91,7 @@ class AuthenticatedFlightApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminFlightApiTests(TestCase):
+class AdminAirplaneApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(

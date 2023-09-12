@@ -3,7 +3,7 @@ from django.test import TestCase
 from airplane.models import Airline, AirplaneType, Airplane
 
 
-class AirplaneModelTests(TestCase):
+class AirplaneModelsTests(TestCase):
     def test_airline_str(self):
         airline = Airline.objects.create(name="test_airline")
 

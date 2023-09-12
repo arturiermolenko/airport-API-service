@@ -10,6 +10,12 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ("id", "name", "country")
+
+
+class CityListSerializer(CitySerializer):
     country = serializers.StringRelatedField(
         many=False,
         read_only=True
@@ -21,6 +27,12 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class AirportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Airport
+        fields = ("id", "name", "airport_code", "city")
+
+
+class AirportListSerializer(AirportSerializer):
     city = serializers.StringRelatedField(
         many=False,
         read_only=True,
@@ -28,19 +40,13 @@ class AirportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Airport
-        fields = ("id", "name", "city")
-
-
-class AirportCreateSerializer(AirportSerializer):
-    class Meta:
-        model = Airport
-        fields = ("id", "name", "city")
+        fields = ("id", "name", "airport_code", "city")
 
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ("id", "code", "source", "destination", "distance")
+        fields = ("id", "source", "destination", "distance")
 
 
 class RouteListSerializer(RouteSerializer):

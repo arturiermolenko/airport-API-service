@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
@@ -14,8 +15,8 @@ from .serializers import (
     AirportSerializer,
     RouteSerializer,
     RouteDetailSerializer,
-    AirportCreateSerializer,
-    RouteListSerializer
+    RouteListSerializer,
+    CityListSerializer, AirportListSerializer
 )
 
 
@@ -49,6 +50,12 @@ class CityViewSet(
 
         return queryset
 
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CityListSerializer
+
+        return CitySerializer
+
 
 class AirportViewSet(
     mixins.ListModelMixin,
@@ -72,8 +79,8 @@ class AirportViewSet(
         return queryset
 
     def get_serializer_class(self):
-        if self.action == "create":
-            return AirportCreateSerializer
+        if self.action == "list":
+            return AirportListSerializer
 
         return AirportSerializer
 
@@ -90,6 +97,19 @@ class RouteViewSet(
     )
     serializer_class = RouteSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        airport = self.request.query_params.get("airport")
+
+        if airport:
+            queryset = queryset.filter(
+                Q(source__name__icontains=airport) |
+                Q(destination__name__icontains=airport)
+            )
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
