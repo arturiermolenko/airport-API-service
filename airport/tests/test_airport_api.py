@@ -50,7 +50,7 @@ def sample_route():
     )
 
 
-def get_detail_url(route_id):
+def get_detail_route_url(route_id):
     return reverse("airport:route-detail", args=[route_id])
 
 
@@ -275,14 +275,14 @@ class AdminAirportApiTests(TestCase):
             "distance": 500
         }
 
-        url = get_detail_url(route.id)
+        url = get_detail_route_url(route.id)
         response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def test_delete_movie_not_allowed(self):
+    def test_delete_route_not_allowed(self):
         route = sample_route()
-        url = get_detail_url(route.id)
+        url = get_detail_route_url(route.id)
 
         response = self.client.delete(url)
 

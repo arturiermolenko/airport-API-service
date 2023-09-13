@@ -8,7 +8,7 @@ from .views import (
 )
 
 router = routers.DefaultRouter()
-router.register("crew-members", CrewViewSet)
+router.register("crew-members", CrewViewSet, basename="crew-members")
 router.register("flights", FlightViewSet)
 router.register("orders", OrderViewSet)
 

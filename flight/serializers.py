@@ -16,7 +16,13 @@ class CrewSerializer(serializers.ModelSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = ("id",)
+        fields = (
+            "id",
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time",
+        )
 
 
 class FlightListSerializer(FlightSerializer):
@@ -29,6 +35,10 @@ class FlightListSerializer(FlightSerializer):
         many=False,
         read_only=True
     )
+    crew_members = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+    )
     tickets_available = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -37,6 +47,7 @@ class FlightListSerializer(FlightSerializer):
             "id",
             "route",
             "airplane",
+            "crew_members",
             "departure_time",
             "arrival_time",
             "tickets_available"
