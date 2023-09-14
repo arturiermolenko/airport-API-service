@@ -50,7 +50,7 @@ class FlightListSerializer(FlightSerializer):
             "crew_members",
             "departure_time",
             "arrival_time",
-            "tickets_available"
+            "tickets_available",
         )
 
 

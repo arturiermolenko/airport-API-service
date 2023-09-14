@@ -1,4 +1,4 @@
-from django.db.models import F, Count
+from django.db.models import F, Count, Case, When, Value
 from rest_framework import mixins, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
@@ -12,7 +12,8 @@ from .serializers import (
     FlightListSerializer,
     OrderSerializer,
     OrderListSerializer,
-    FlightDetailSerializer, OrderDetailSerializer,
+    FlightDetailSerializer,
+    OrderDetailSerializer,
 )
 
 
@@ -27,12 +28,12 @@ class FlightViewSet(viewsets.ModelViewSet):
         Flight.objects.select_related(
             "route__source__city__country",
             "airplane",
-            "route__destination__city__country"
+            "route__destination__city__country",
         )
         .prefetch_related("crew_members")
         .annotate(
             tickets_available=(
-                    F("airplane__rows") * F("airplane__seats_in_row") - Count("ticket")
+                F("airplane__rows") * F("airplane__seats_in_row") - Count("ticket")
             )
         )
     )
@@ -58,7 +59,7 @@ class OrderViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
-    GenericViewSet
+    GenericViewSet,
 ):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -66,13 +67,9 @@ class OrderViewSet(
     pagination_class = OrderPagination
 
     def get_queryset(self):
-        queryset = (Order.objects
-                    .filter(user=self.request.user)
-                    .prefetch_related(
-                        "tickets__meal",
-                        "tickets__flight__route__source__city__country",
-                        "tickets"
-                    ))
+        queryset = Order.objects.filter(user=self.request.user).prefetch_related(
+            "tickets__meal", "tickets__flight__route__source__city__country", "tickets"
+        )
         return queryset
 
     def get_serializer_class(self):
