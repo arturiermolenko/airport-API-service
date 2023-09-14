@@ -1,0 +1,575 @@
+[
+  {
+    "model": "flight.crew",
+    "pk": 1,
+    "fields": {
+      "first_name": "Kali",
+      "last_name": "White",
+      "position": "Captain"
+    }
+  },
+  {
+    "model": "flight.crew",
+    "pk": 2,
+    "fields": {
+      "first_name": "Damir",
+      "last_name": "Henderson",
+      "position": "First officer"
+    }
+  },
+  {
+    "model": "flight.crew",
+    "pk": 3,
+    "fields": {
+      "first_name": "Melanie",
+      "last_name": "Meza",
+      "position": "Flight attendant"
+    }
+  },
+  {
+    "model": "flight.crew",
+    "pk": 4,
+    "fields": {
+      "first_name": "Keanu",
+      "last_name": "Bradford",
+      "position": "Purser"
+    }
+  },
+  {
+    "model": "flight.crew",
+    "pk": 5,
+    "fields": {
+      "first_name": "Marley",
+      "last_name": "Rhodes",
+      "position": "Flight Engineer"
+    }
+  },
+  {
+    "model": "flight.crew",
+    "pk": 6,
+    "fields": {
+      "first_name": "Drew",
+      "last_name": "Peterson",
+      "position": "First officer"
+    }
+  },
+  {
+    "model": "flight.meal",
+    "pk": 1,
+    "fields": {
+      "meal": "STANDART"
+    }
+  },
+  {
+    "model": "flight.meal",
+    "pk": 2,
+    "fields": {
+      "meal": "VEGETARIAN"
+    }
+  },
+  {
+    "model": "flight.meal",
+    "pk": 3,
+    "fields": {
+      "meal": "NO_MEAL"
+    }
+  },
+  {
+    "model": "flight.flight",
+    "pk": 1,
+    "fields": {
+      "route": 1,
+      "airplane": 2,
+      "departure_time": "2023-09-30T11:01:48Z",
+      "arrival_time": "2023-09-30T13:02:07Z",
+      "crew_members": [
+        1,
+        2,
+        6
+      ]
+    }
+  },
+  {
+    "model": "flight.flight",
+    "pk": 2,
+    "fields": {
+      "route": 3,
+      "airplane": 1,
+      "departure_time": "2023-09-29T11:02:40Z",
+      "arrival_time": "2023-09-29T11:02:43Z",
+      "crew_members": [
+        2,
+        5,
+        4
+      ]
+    }
+  },
+  {
+    "model": "flight.flight",
+    "pk": 3,
+    "fields": {
+      "route": 4,
+      "airplane": 3,
+      "departure_time": "2023-09-23T17:02:00Z",
+      "arrival_time": "2023-09-23T19:21:00Z",
+      "crew_members": [
+        1,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "model": "flight.order",
+    "pk": 1,
+    "fields": {
+      "created_at": "2023-09-10T11:03:30.173Z",
+      "user": 1
+    }
+  },
+  {
+    "model": "flight.order",
+    "pk": 2,
+    "fields": {
+      "created_at": "2023-09-10T13:46:47.308Z",
+      "user": 1
+    }
+  },
+  {
+    "model": "flight.order",
+    "pk": 3,
+    "fields": {
+      "created_at": "2023-09-11T18:06:03.553Z",
+      "user": 2
+    }
+  },
+  {
+    "model": "flight.order",
+    "pk": 4,
+    "fields": {
+      "created_at": "2023-09-11T18:07:50.891Z",
+      "user": 2
+    }
+  },
+  {
+    "model": "flight.ticket",
+    "pk": 1,
+    "fields": {
+      "row": 1,
+      "seat": 1,
+      "flight": 2,
+      "meal": 1,
+      "order": 1,
+      "ticket_class": "ECONOMY"
+    }
+  },
+  {
+    "model": "flight.ticket",
+    "pk": 2,
+    "fields": {
+      "row": 1,
+      "seat": 2,
+      "flight": 2,
+      "meal": 1,
+      "order": 1,
+      "ticket_class": "ECONOMY"
+    }
+  },
+  {
+    "model": "flight.ticket",
+    "pk": 3,
+    "fields": {
+      "row": 1,
+      "seat": 4,
+      "flight": 2,
+      "meal": 2,
+      "order": 2,
+      "ticket_class": "ECONOMY"
+    }
+  },
+  {
+    "model": "flight.ticket",
+    "pk": 4,
+    "fields": {
+      "row": 1,
+      "seat": 7,
+      "flight": 2,
+      "meal": 2,
+      "order": 3,
+      "ticket_class": "ECONOMY"
+    }
+  },
+  {
+    "model": "flight.ticket",
+    "pk": 5,
+    "fields": {
+      "row": 1,
+      "seat": 8,
+      "flight": 2,
+      "meal": 2,
+      "order": 4,
+      "ticket_class": "ECONOMY"
+    }
+  },
+  {
+    "model": "airport.country",
+    "pk": 1,
+    "fields": {
+      "name": "Ukraine"
+    }
+  },
+  {
+    "model": "airport.country",
+    "pk": 2,
+    "fields": {
+      "name": "Germany"
+    }
+  },
+  {
+    "model": "airport.country",
+    "pk": 3,
+    "fields": {
+      "name": "Spain"
+    }
+  },
+  {
+    "model": "airport.country",
+    "pk": 4,
+    "fields": {
+      "name": "Turkey"
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 1,
+    "fields": {
+      "name": "Madrid",
+      "country": 3
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 2,
+    "fields": {
+      "name": "Barcelona",
+      "country": 3
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 3,
+    "fields": {
+      "name": "Munich",
+      "country": 2
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 4,
+    "fields": {
+      "name": "Boryspil",
+      "country": 1
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 5,
+    "fields": {
+      "name": "Frankfurt",
+      "country": 2
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 6,
+    "fields": {
+      "name": "Istanbul",
+      "country": 4
+    }
+  },
+  {
+    "model": "airport.city",
+    "pk": 7,
+    "fields": {
+      "name": "Dresden",
+      "country": 2
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 1,
+    "fields": {
+      "name": "Ataturk International Airport",
+      "airport_code": "ATA",
+      "city": 6
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 2,
+    "fields": {
+      "name": "Dresden International Airport",
+      "airport_code": "DIA",
+      "city": 7
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 3,
+    "fields": {
+      "name": "Boryspil International Airport",
+      "airport_code": "BIA",
+      "city": 4
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 4,
+    "fields": {
+      "name": "Munich International Airport",
+      "airport_code": "MUN",
+      "city": 3
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 5,
+    "fields": {
+      "name": "Frankfurt International Airport",
+      "airport_code": "FRA",
+      "city": 5
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 6,
+    "fields": {
+      "name": "Barcelona-El Prat Airport",
+      "airport_code": "BAE",
+      "city": 2
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 7,
+    "fields": {
+      "name": "El Prat de Llobregat Aeropuerto",
+      "airport_code": "EPL",
+      "city": 2
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 8,
+    "fields": {
+      "name": "Adolfo Su�rez Madrid�Barajas",
+      "airport_code": "ASM",
+      "city": 1
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 9,
+    "fields": {
+      "name": "Torrejon Airport",
+      "airport_code": "TOR",
+      "city": 1
+    }
+  },
+  {
+    "model": "airport.airport",
+    "pk": 10,
+    "fields": {
+      "name": "Cuatro Vientos Airport",
+      "airport_code": "CVA",
+      "city": 1
+    }
+  },
+  {
+    "model": "airport.route",
+    "pk": 1,
+    "fields": {
+      "source": 3,
+      "destination": 4,
+      "distance": 2214
+    }
+  },
+  {
+    "model": "airport.route",
+    "pk": 2,
+    "fields": {
+      "source": 4,
+      "destination": 5,
+      "distance": 278
+    }
+  },
+  {
+    "model": "airport.route",
+    "pk": 3,
+    "fields": {
+      "source": 8,
+      "destination": 3,
+      "distance": 3116
+    }
+  },
+  {
+    "model": "airport.route",
+    "pk": 4,
+    "fields": {
+      "source": 3,
+      "destination": 1,
+      "distance": 967
+    }
+  },
+  {
+    "model": "airport.route",
+    "pk": 5,
+    "fields": {
+      "source": 1,
+      "destination": 6,
+      "distance": 2138
+    }
+  },
+  {
+    "model": "airplane.airline",
+    "pk": 1,
+    "fields": {
+      "name": "American Airlines"
+    }
+  },
+  {
+    "model": "airplane.airline",
+    "pk": 2,
+    "fields": {
+      "name": "Southwest Airlines"
+    }
+  },
+  {
+    "model": "airplane.airline",
+    "pk": 3,
+    "fields": {
+      "name": "Delta Airlines"
+    }
+  },
+  {
+    "model": "airplane.airline",
+    "pk": 4,
+    "fields": {
+      "name": "United Airlines"
+    }
+  },
+  {
+    "model": "airplane.airline",
+    "pk": 5,
+    "fields": {
+      "name": "Turkish Airlines"
+    }
+  },
+  {
+    "model": "airplane.airplanetype",
+    "pk": 1,
+    "fields": {
+      "name": "Airbus A380"
+    }
+  },
+  {
+    "model": "airplane.airplanetype",
+    "pk": 2,
+    "fields": {
+      "name": "Boeing 747-8"
+    }
+  },
+  {
+    "model": "airplane.airplanetype",
+    "pk": 3,
+    "fields": {
+      "name": "Airbus A320 family"
+    }
+  },
+  {
+    "model": "airplane.airplanetype",
+    "pk": 4,
+    "fields": {
+      "name": "Airbus A340"
+    }
+  },
+  {
+    "model": "airplane.airplanetype",
+    "pk": 5,
+    "fields": {
+      "name": "Boeing 787 Dreamliner"
+    }
+  },
+  {
+    "model": "airplane.airplane",
+    "pk": 1,
+    "fields": {
+      "name": "AB-320463",
+      "rows": 30,
+      "seats_in_row": 20,
+      "airline": 1,
+      "airplane_type": 1
+    }
+  },
+  {
+    "model": "airplane.airplane",
+    "pk": 2,
+    "fields": {
+      "name": "AB-340320",
+      "rows": 17,
+      "seats_in_row": 12,
+      "airline": 2,
+      "airplane_type": 2
+    }
+  },
+  {
+    "model": "airplane.airplane",
+    "pk": 3,
+    "fields": {
+      "name": "AB-356727",
+      "rows": 32,
+      "seats_in_row": 8,
+      "airline": 3,
+      "airplane_type": 3
+    }
+  },
+  {
+    "model": "airplane.airplane",
+    "pk": 4,
+    "fields": {
+      "name": "BO-747360",
+      "rows": 28,
+      "seats_in_row": 10,
+      "airline": 4,
+      "airplane_type": 2
+    }
+  },
+  {
+    "model": "airplane.airplane",
+    "pk": 5,
+    "fields": {
+      "name": "BO-787240",
+      "rows": 28,
+      "seats_in_row": 8,
+      "airline": 5,
+      "airplane_type": 5
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$fc6sZFEwQ0AFI2A5sK3tMi$URokpcNR1gAvJ3kT2WpjhpneLq08vnnRa/3istqw/mE=",
+      "last_login": "2023-09-10T10:25:49.313Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-09-10T09:56:01.701Z",
+      "email": "admin@airport.com",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
