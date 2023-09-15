@@ -1,4 +1,5 @@
 import datetime
+import random
 from random import choices
 from string import ascii_lowercase
 
@@ -22,6 +23,10 @@ def get_detail_order_url(route_id):
     return reverse("flight:order-detail", args=[route_id])
 
 
+def get_detail_flight_url(flight_id):
+    return reverse("flight:flight-detail", args=[flight_id])
+
+
 def sample_crew_member():
     suffix = ("".join(choices(ascii_lowercase, k=5)))
     return Crew.objects.create(
@@ -33,14 +38,20 @@ def sample_crew_member():
 
 
 def sample_flight():
+    date_str = '2023-02-28 14:30:00'
+    date_format = '%Y-%m-%d %H:%M:%S'
+    departure_time = (
+            datetime.datetime.strptime(date_str, date_format) +
+            datetime.timedelta(hours=random.randint(1, 100))
+    )
     route = sample_route()
     airplane = sample_airplane()
     flight = Flight.objects.create(
         route=route,
         airplane=airplane,
-        departure_time=datetime.datetime.now(),
+        departure_time=departure_time,
         arrival_time=(
-                datetime.datetime.now() +
+                departure_time +
                 datetime.timedelta(hours=2)
         )
     )
@@ -102,14 +113,15 @@ class AuthenticatedFlightApiTests(TestCase):
         sample_flight()
 
         response = self.client.get(FLIGHT_URL)
+        data = response.data
+        for flight in data:
+            del (flight["tickets_available"])
 
-        flights = Flight.objects.order_by("departure_time")
+        flights = Flight.objects.order_by("-id")
         serializer = FlightListSerializer(flights, many=True)
-        for flight in response.data:
-            del(flight["tickets_available"])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(data, serializer.data)
 
     def test_create_flight_forbidden(self):
         sample_route()
@@ -224,6 +236,41 @@ class AdminFlightApiTests(TestCase):
         response = self.client.post(FLIGHT_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_patch_flight(self):
+        flight = sample_flight()
+        data = {
+            "departure_time": "2023-12-27 08:26:49.219717",
+        }
+
+        url = get_detail_flight_url(flight_id=flight.id)
+        response = self.client.patch(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_put_flight(self):
+        route = sample_route()
+        airplane = sample_airplane()
+        flight = sample_flight()
+        data = {
+            "route": route.id,
+            "airplane": airplane.id,
+            "departure_time": "2022-12-27 08:26:49.219717",
+            "arrival_time": "2022-12-27 08:26:49.219717",
+
+        }
+        url = get_detail_flight_url(flight_id=flight.id)
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_flight(self):
+        flight = sample_flight()
+
+        url = get_detail_flight_url(flight_id=flight.id)
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_put_order_not_allowed(self):
         flight = sample_flight()

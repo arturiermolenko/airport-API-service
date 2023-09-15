@@ -17,7 +17,11 @@ from .serializers import (
 )
 
 
-class CrewViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
+class CrewViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)

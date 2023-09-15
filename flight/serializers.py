@@ -52,6 +52,7 @@ class FlightListSerializer(FlightSerializer):
             "arrival_time",
             "tickets_available",
         )
+        ordering = ["departure_time"]
 
 
 class TicketSerializer(serializers.ModelSerializer):

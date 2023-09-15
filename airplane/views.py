@@ -2,8 +2,18 @@ from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
 from flight.permissions import IsAdminOrIfAuthenticatedReadOnly
-from .models import AirplaneType, Airplane
-from .serializers import AirplaneTypeSerializer, AirplaneSerializer, AirplaneListSerializer
+from .models import AirplaneType, Airplane, Airline
+from .serializers import AirplaneTypeSerializer, AirplaneSerializer, AirplaneListSerializer, AirlineSerializer
+
+
+class AirlineViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    queryset = Airline.objects.all()
+    serializer_class = AirlineSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 class AirplaneTypeViewSet(
