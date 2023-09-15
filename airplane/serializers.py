@@ -18,7 +18,14 @@ class AirlineSerializer(serializers.ModelSerializer):
 class AirplaneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
-        fields = ("id", "name", "rows", "seats_in_row", "airplane_type", "airline")
+        fields = (
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "airplane_type",
+            "airline",
+            "image")
 
 
 class AirplaneListSerializer(AirplaneSerializer):
@@ -33,4 +40,12 @@ class AirplaneListSerializer(AirplaneSerializer):
 
     class Meta:
         model = Airplane
-        fields = ("id", "name", "rows", "seats_in_row", "airplane_type", "airline_name")
+        fields = (
+            "id",
+            "name",
+            "rows",
+            "seats_in_row",
+            "airplane_type",
+            "airline_name",
+            "image"
+        )
