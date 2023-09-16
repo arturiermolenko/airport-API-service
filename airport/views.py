@@ -3,12 +3,7 @@ from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
 from flight.permissions import IsAdminOrIfAuthenticatedReadOnly
-from .models import (
-    Country,
-    City,
-    Airport,
-    Route
-)
+from .models import Country, City, Airport, Route
 from .serializers import (
     CountrySerializer,
     CitySerializer,
@@ -16,25 +11,18 @@ from .serializers import (
     RouteSerializer,
     RouteDetailSerializer,
     RouteListSerializer,
-    CityListSerializer, AirportListSerializer
+    CityListSerializer,
+    AirportListSerializer,
 )
 
 
-class CountryViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    GenericViewSet
-):
+class CountryViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
-class CityViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    GenericViewSet
-):
+class CityViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     queryset = City.objects.select_related("country")
     serializer_class = CitySerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
@@ -44,9 +32,7 @@ class CityViewSet(
         queryset = self.queryset
 
         if country:
-            queryset = queryset.filter(
-                country__name__icontains=country
-            )
+            queryset = queryset.filter(country__name__icontains=country)
 
         return queryset
 
@@ -57,11 +43,7 @@ class CityViewSet(
         return CitySerializer
 
 
-class AirportViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    GenericViewSet
-):
+class AirportViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     queryset = Airport.objects.select_related("city__country")
     serializer_class = AirportSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
@@ -72,9 +54,7 @@ class AirportViewSet(
         city = self.request.query_params.get("city")
 
         if city:
-            queryset = queryset.filter(
-                city__name__icontains=city
-            )
+            queryset = queryset.filter(city__name__icontains=city)
 
         return queryset
 
@@ -89,7 +69,7 @@ class RouteViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
-    GenericViewSet
+    GenericViewSet,
 ):
     queryset = Route.objects.select_related(
         "destination__city__country",
@@ -105,8 +85,8 @@ class RouteViewSet(
 
         if airport:
             queryset = queryset.filter(
-                Q(source__name__icontains=airport) |
-                Q(destination__name__icontains=airport)
+                Q(source__name__icontains=airport)
+                | Q(destination__name__icontains=airport)
             )
 
         return queryset

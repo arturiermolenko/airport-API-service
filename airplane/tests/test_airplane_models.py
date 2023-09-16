@@ -23,14 +23,13 @@ class AirplaneModelsTests(TestCase):
             "rows": 30,
             "seats_in_row": 8,
             "airplane_type": airplane_type,
-            "airline": airline
+            "airline": airline,
         }
 
         airplane = Airplane.objects.create(**defaults)
 
         self.assertEqual(
-            str(airplane),
-            f"{airplane.name}, capacity: {airplane.capacity}"
+            str(airplane), f"{airplane.name}, capacity: {airplane.capacity}"
         )
 
     def test_airplane_capacity(self):
@@ -42,13 +41,10 @@ class AirplaneModelsTests(TestCase):
             "rows": 30,
             "seats_in_row": 8,
             "airplane_type": airplane_type,
-            "airline": airline
+            "airline": airline,
         }
 
         airplane = Airplane.objects.create(**defaults)
         capacity = airplane.rows * airplane.seats_in_row
 
-        self.assertEqual(
-            capacity,
-            airplane.capacity
-        )
+        self.assertEqual(capacity, airplane.capacity)

@@ -8,8 +8,12 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from airport.models import Country, City, Airport, Route
-from airport.serializers import AirportSerializer, RouteListSerializer, CityListSerializer, \
-    AirportListSerializer
+from airport.serializers import (
+    AirportSerializer,
+    RouteListSerializer,
+    CityListSerializer,
+    AirportListSerializer,
+)
 
 CITIES_URL = reverse("airport:city-list")
 AIRPORTS_URL = reverse("airport:airport-list")
@@ -17,21 +21,21 @@ ROUTES_URL = reverse("airport:route-list")
 
 
 def sample_city():
-    suffix = ("".join(choices(ascii_lowercase, k=5)))
+    suffix = "".join(choices(ascii_lowercase, k=5))
     country = Country.objects.create(name=f"test_country_{suffix}")
     return City.objects.create(name=f"test_city_{suffix}", country=country)
 
 
 def sample_airport(**params):
-    suffix = ("".join(choices(ascii_lowercase, k=5)))
+    suffix = "".join(choices(ascii_lowercase, k=5))
     country = Country.objects.create(name=f"test_country_{suffix}")
     city = City.objects.create(name=f"test_city_{suffix}", country=country)
-    airport_code = ("".join(choices(ascii_uppercase, k=3)))
+    airport_code = "".join(choices(ascii_uppercase, k=3))
 
     defaults = {
         "name": f"test_airport_{suffix}",
         "airport_code": airport_code,
-        "city": city
+        "city": city,
     }
     defaults.update(params)
 
@@ -44,9 +48,7 @@ def sample_route():
     distance = 1000
 
     return Route.objects.create(
-        source=source,
-        destination=destination,
-        distance=distance
+        source=source, destination=destination, distance=distance
     )
 
 
@@ -111,10 +113,7 @@ class AuthenticatedAirportApiTests(TestCase):
 
     def test_create_city_forbidden(self):
         country = Country.objects.create(name="test_country")
-        data = {
-            "name": "test_city",
-            "country": country
-        }
+        data = {"name": "test_city", "country": country}
         response = self.client.post(CITIES_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -138,9 +137,7 @@ class AuthenticatedAirportApiTests(TestCase):
         country = Country.objects.create(name="Not match")
         city = City.objects.create(name="Not match", country=country)
         airport_3 = Airport.objects.create(
-            name="Not match",
-            airport_code="TTT",
-            city=city
+            name="Not match", airport_code="TTT", city=city
         )
 
         response = self.client.get(AIRPORTS_URL, {"city": "city"})
@@ -156,11 +153,7 @@ class AuthenticatedAirportApiTests(TestCase):
     def test_create_airport_forbidden(self):
         city = sample_city()
 
-        data = {
-            "name": "test_city",
-            "airport_code": "AAA",
-            "city": city
-        }
+        data = {"name": "test_city", "airport_code": "AAA", "city": city}
         response = self.client.post(AIRPORTS_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -184,19 +177,13 @@ class AuthenticatedAirportApiTests(TestCase):
         city_1 = sample_city()
         city_2 = sample_city()
         airport_1 = Airport.objects.create(
-            name="not_match_1",
-            airport_code="TTT",
-            city=city_1
+            name="not_match_1", airport_code="TTT", city=city_1
         )
         airport_2 = Airport.objects.create(
-            name="not_match_2",
-            airport_code="TNT",
-            city=city_2
+            name="not_match_2", airport_code="TNT", city=city_2
         )
         route_3 = Route.objects.create(
-            source=airport_1,
-            destination=airport_2,
-            distance=500
+            source=airport_1, destination=airport_2, distance=500
         )
 
         response = self.client.get(ROUTES_URL, {"airport": "airport"})
@@ -213,11 +200,7 @@ class AuthenticatedAirportApiTests(TestCase):
         source = sample_airport()
         destination = sample_airport()
 
-        data = {
-            "source": source,
-            "destination": destination,
-            "distance": 400
-        }
+        data = {"source": source, "destination": destination, "distance": 400}
         response = self.client.post(ROUTES_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -233,21 +216,14 @@ class AdminAirportApiTests(TestCase):
 
     def test_create_city(self):
         country = Country.objects.create(name="test_country_new")
-        data = {
-            "name": "test_city",
-            "country": country.id
-        }
+        data = {"name": "test_city", "country": country.id}
         response = self.client.post(CITIES_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_airport(self):
         city = sample_city()
-        data = {
-            "name": "test_airport",
-            "airport_code": "ATE",
-            "city": city.id
-        }
+        data = {"name": "test_airport", "airport_code": "ATE", "city": city.id}
         response = self.client.post(AIRPORTS_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -256,11 +232,7 @@ class AdminAirportApiTests(TestCase):
         airport_1 = sample_airport()
         airport_2 = sample_airport()
 
-        data = {
-            "source": airport_1.id,
-            "destination": airport_2.id,
-            "distance": 500
-        }
+        data = {"source": airport_1.id, "destination": airport_2.id, "distance": 500}
         response = self.client.post(ROUTES_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -269,11 +241,7 @@ class AdminAirportApiTests(TestCase):
         airport_1 = sample_airport()
         airport_2 = sample_airport()
         route = sample_route()
-        data = {
-            "source": airport_1.id,
-            "destination": airport_2.id,
-            "distance": 500
-        }
+        data = {"source": airport_1.id, "destination": airport_2.id, "distance": 500}
 
         url = get_detail_route_url(route.id)
         response = self.client.put(url, data)

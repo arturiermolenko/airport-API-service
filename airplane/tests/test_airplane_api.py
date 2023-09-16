@@ -16,14 +16,14 @@ AIRPLANE_URL = reverse("airplane:airplane-list")
 def sample_airplane(**params):
     airplane_type = AirplaneType.objects.create(name="test_type")
     airline = Airline.objects.create(name="test_airline")
-    suffix = ("".join(choices(ascii_lowercase, k=5)))
+    suffix = "".join(choices(ascii_lowercase, k=5))
 
     defaults = {
         "name": f"test_name_{suffix}",
         "rows": 30,
         "seats_in_row": 8,
         "airplane_type": airplane_type,
-        "airline": airline
+        "airline": airline,
     }
     defaults.update(params)
 
@@ -84,7 +84,7 @@ class AuthenticatedFlightApiTests(TestCase):
             "rows": 30,
             "seats_in_row": 8,
             "airplane_type": airplane_type,
-            "airline_name": airline
+            "airline_name": airline,
         }
         response = self.client.post(AIRPLANE_URL, data)
 
@@ -108,7 +108,7 @@ class AdminAirplaneApiTests(TestCase):
             "rows": 30,
             "seats_in_row": 8,
             "airplane_type": airplane_type.id,
-            "airline": airline.id
+            "airline": airline.id,
         }
         response = self.client.post(AIRPLANE_URL, data)
 

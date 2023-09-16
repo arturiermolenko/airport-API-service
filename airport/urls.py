@@ -1,12 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import (
-    CountryViewSet,
-    CityViewSet,
-    AirportViewSet,
-    RouteViewSet
-)
+from .views import CountryViewSet, CityViewSet, AirportViewSet, RouteViewSet
 
 router = routers.DefaultRouter()
 router.register("countries", CountryViewSet)

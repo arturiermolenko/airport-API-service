@@ -11,63 +11,47 @@ class AirportModelsTests(TestCase):
         city_1 = City.objects.create(name="test_city_1", country=country_1)
         city_2 = City.objects.create(name="test_city_2", country=country_2)
         airport_1 = Airport.objects.create(
-            name="test_airport_1",
-            city=city_1,
-            airport_code="TES"
+            name="test_airport_1", city=city_1, airport_code="TES"
         )
         airport_2 = Airport.objects.create(
-            name="test_airport_2",
-            city=city_2,
-            airport_code="SET"
+            name="test_airport_2", city=city_2, airport_code="SET"
         )
-        Route.objects.create(
-            source=airport_1,
-            destination=airport_2,
-            distance=1000
-        )
+        Route.objects.create(source=airport_1, destination=airport_2, distance=1000)
 
     def test_country_str(self):
-        country = Country.objects.get(id=1)
+        country = Country.objects.first()
 
         self.assertEqual(str(country), country.name)
 
     def test_city_str(self):
-        city = City.objects.get(id=1)
+        city = City.objects.first()
 
-        self.assertEqual(
-            str(city),
-            f"{city.country.name}: {city.name}"
-        )
+        self.assertEqual(str(city), f"{city.country.name}: {city.name}")
 
     def test_airport_str(self):
-        airport = Airport.objects.get(id=1)
+        airport = Airport.objects.first()
 
         self.assertEqual(str(airport), airport.name)
 
     def test_route_str(self):
-        route = Route.objects.get(id=1)
+        route = Route.objects.first()
 
-        self.assertEqual(
-            str(route),
-            f"{route.source} - {route.destination}"
-        )
+        self.assertEqual(str(route), f"{route.source} - {route.destination}")
 
     def test_route_unique_together(self):
-        airport_1 = Airport.objects.get(id=1)
-        airport_2 = Airport.objects.get(id=2)
+        airport_1 = Airport.objects.first()
+        airport_2 = Airport.objects.get(id=airport_1.id + 1)
 
         with self.assertRaises(IntegrityError):
-            Route.objects.create(
-                source=airport_1,
-                destination=airport_2,
-                distance=1000
-            )
+            Route.objects.create(source=airport_1, destination=airport_2, distance=1000)
 
     def test_route_code(self):
-        route = Route.objects.get(id=1)
+        route = Route.objects.first()
 
         self.assertEqual(
             route.code,
-            (f"{route.source.city}: {route.source.airport_code} - "
-             f"{route.destination.city}: {route.destination.airport_code}")
+            (
+                f"{route.source.city}: {route.source.airport_code} - "
+                f"{route.destination.city}: {route.destination.airport_code}"
+            ),
         )

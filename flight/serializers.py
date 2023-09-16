@@ -26,15 +26,8 @@ class FlightSerializer(serializers.ModelSerializer):
 
 
 class FlightListSerializer(FlightSerializer):
-    route = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field="code"
-    )
-    airplane = serializers.StringRelatedField(
-        many=False,
-        read_only=True
-    )
+    route = serializers.SlugRelatedField(many=False, read_only=True, slug_field="code")
+    airplane = serializers.StringRelatedField(many=False, read_only=True)
     crew_members = serializers.StringRelatedField(
         many=True,
         read_only=True,
@@ -58,62 +51,32 @@ class FlightListSerializer(FlightSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = (
-            "id",
-            "row",
-            "seat",
-            "flight",
-            "ticket_class",
-            "meal"
-        )
+        fields = ("id", "row", "seat", "flight", "ticket_class", "meal")
 
     def validate(self, attrs):
         data = super(TicketSerializer, self).validate(attrs=attrs)
         Ticket.validate_ticket(
-            attrs["row"],
-            attrs["seat"],
-            attrs["flight"].airplane,
-            ValidationError
+            attrs["row"], attrs["seat"], attrs["flight"].airplane, ValidationError
         )
         return data
 
 
 class TicketListSerializer(TicketSerializer):
     flight = serializers.StringRelatedField(many=False, read_only=True)
-    meal = serializers.CharField(
-        source="meal.meal",
-        read_only=True
-    )
+    meal = serializers.CharField(source="meal.meal", read_only=True)
 
     class Meta:
         model = Ticket
-        fields = (
-            "id",
-            "row",
-            "seat",
-            "flight",
-            "ticket_class",
-            "meal"
-        )
+        fields = ("id", "row", "seat", "flight", "ticket_class", "meal")
 
 
 class TicketDetailSerializer(TicketSerializer):
     flight = FlightListSerializer(many=False, read_only=True)
-    meal = serializers.CharField(
-        source="meal.meal",
-        read_only=True
-    )
+    meal = serializers.CharField(source="meal.meal", read_only=True)
 
     class Meta:
         model = Ticket
-        fields = (
-            "id",
-            "row",
-            "seat",
-            "flight",
-            "ticket_class",
-            "meal"
-        )
+        fields = ("id", "row", "seat", "flight", "ticket_class", "meal")
 
 
 class TicketSeatsSerializer(TicketSerializer):
@@ -125,9 +88,7 @@ class TicketSeatsSerializer(TicketSerializer):
 class FlightDetailSerializer(FlightSerializer):
     route = RouteListSerializer(many=False, read_only=True)
     airplane = AirplaneSerializer(many=False, read_only=True)
-    taken_places = TicketSeatsSerializer(
-        source="tickets", many=True, read_only=True
-    )
+    taken_places = TicketSeatsSerializer(source="tickets", many=True, read_only=True)
 
     class Meta:
         model = Flight
@@ -137,7 +98,8 @@ class FlightDetailSerializer(FlightSerializer):
             "airplane",
             "taken_places",
             "departure_time",
-            "arrival_time")
+            "arrival_time",
+        )
 
 
 class OrderSerializer(serializers.ModelSerializer):

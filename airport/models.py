@@ -40,15 +40,9 @@ class Airport(models.Model):
 
 
 class Route(models.Model):
-    source = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="source"
-    )
+    source = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="source")
     destination = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="destination"
+        Airport, on_delete=models.CASCADE, related_name="destination"
     )
     distance = models.IntegerField()
 
@@ -61,5 +55,7 @@ class Route(models.Model):
     @property
     @extend_schema_field(OpenApiTypes.STR)
     def code(self):
-        return (f"{self.source.city}: {self.source.airport_code} - "
-                f"{self.destination.city}: {self.destination.airport_code}")
+        return (
+            f"{self.source.city}: {self.source.airport_code} - "
+            f"{self.destination.city}: {self.destination.airport_code}"
+        )

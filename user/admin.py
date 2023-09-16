@@ -20,7 +20,7 @@ class UserAdmin(DjangoUserAdmin):
                     "is_stuff",
                     "is_superuser",
                     "groups",
-                    "user_permissions"
+                    "user_permissions",
                 )
             },
         ),

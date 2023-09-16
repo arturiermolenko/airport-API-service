@@ -28,32 +28,31 @@ def get_detail_flight_url(flight_id):
 
 
 def sample_crew_member():
-    suffix = ("".join(choices(ascii_lowercase, k=5)))
+    suffix = "".join(choices(ascii_lowercase, k=5))
     return Crew.objects.create(
         first_name=f"test_first_name_{suffix}",
         last_name=f"test_last_name_{suffix}",
-        position=f"test_position_{suffix}"
+        position=f"test_position_{suffix}",
+    )
 
+
+def sample_departure_time():
+    date_str = "2023-02-28 14:30:00"
+    date_format = "%Y-%m-%d %H:%M:%S"
+    return datetime.datetime.strptime(date_str, date_format) + datetime.timedelta(
+        hours=random.randint(1, 100)
     )
 
 
 def sample_flight():
-    date_str = '2023-02-28 14:30:00'
-    date_format = '%Y-%m-%d %H:%M:%S'
-    departure_time = (
-            datetime.datetime.strptime(date_str, date_format) +
-            datetime.timedelta(hours=random.randint(1, 100))
-    )
+    departure_time = sample_departure_time()
     route = sample_route()
     airplane = sample_airplane()
     flight = Flight.objects.create(
         route=route,
         airplane=airplane,
         departure_time=departure_time,
-        arrival_time=(
-                departure_time +
-                datetime.timedelta(hours=2)
-        )
+        arrival_time=(departure_time + datetime.timedelta(hours=2)),
     )
     return flight
 
@@ -101,7 +100,7 @@ class AuthenticatedFlightApiTests(TestCase):
         data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",
-            "position": "test_position"
+            "position": "test_position",
         }
         response = self.client.post(CREW_URL, data)
 
@@ -115,23 +114,23 @@ class AuthenticatedFlightApiTests(TestCase):
         response = self.client.get(FLIGHT_URL)
         data = response.data
         for flight in data:
-            del (flight["tickets_available"])
+            del flight["tickets_available"]
 
-        flights = Flight.objects.order_by("-id")
+        flights = Flight.objects.order_by("id")
         serializer = FlightListSerializer(flights, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data, serializer.data)
 
     def test_create_flight_forbidden(self):
-        sample_route()
-        sample_airplane()
+        route = sample_route()
+        airplane = sample_airplane()
+        departure_time = sample_departure_time()
         data = {
-            "route": 1,
-            "airplane": 1,
-            "departure_time": "2022-12-27 08:26:49.219717",
-            "arrival_time": "2022-12-27 08:26:49.219717",
-
+            "route": route.id,
+            "airplane": airplane.id,
+            "departure_time": departure_time,
+            "arrival_time": (departure_time + datetime.timedelta(hours=2)),
         }
         response = self.client.post(FLIGHT_URL, data)
 
@@ -151,7 +150,7 @@ class AuthenticatedFlightApiTests(TestCase):
             flight=flight,
             order=order_1,
             meal=meal,
-            ticket_class="ECONOMY"
+            ticket_class="ECONOMY",
         ),
         Ticket.objects.create(
             row=1,
@@ -159,7 +158,7 @@ class AuthenticatedFlightApiTests(TestCase):
             flight=flight,
             order=order_2,
             meal=meal,
-            ticket_class="BUSINESS"
+            ticket_class="BUSINESS",
         )
         Ticket.objects.create(
             row=1,
@@ -167,7 +166,7 @@ class AuthenticatedFlightApiTests(TestCase):
             flight=flight,
             order=order_3,
             meal=meal,
-            ticket_class="ECONOMY"
+            ticket_class="ECONOMY",
         )
 
         response = self.client.get(ORDER_URL)
@@ -183,12 +182,7 @@ class AuthenticatedFlightApiTests(TestCase):
         meal = Meal.objects.create()
         order = Order.objects.create(user=self.user)
         Ticket.objects.create(
-            row=1,
-            seat=1,
-            flight=flight,
-            order=order,
-            meal=meal,
-            ticket_class="ECONOMY"
+            row=1, seat=1, flight=flight, order=order, meal=meal, ticket_class="ECONOMY"
         )
 
         self.client.logout()
@@ -217,21 +211,21 @@ class AdminFlightApiTests(TestCase):
         data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",
-            "position": "test_position"
+            "position": "test_position",
         }
         response = self.client.post(CREW_URL, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_flight(self):
-        sample_route()
-        sample_airplane()
+        route = sample_route()
+        airplane = sample_airplane()
+        departure_time = sample_departure_time()
         data = {
-            "route": 1,
-            "airplane": 1,
-            "departure_time": "2022-12-27 08:26:49.219717",
-            "arrival_time": "2022-12-27 08:26:49.219717",
-
+            "route": route.id,
+            "airplane": airplane.id,
+            "departure_time": departure_time,
+            "arrival_time": (departure_time + datetime.timedelta(hours=2)),
         }
         response = self.client.post(FLIGHT_URL, data)
 
@@ -239,8 +233,9 @@ class AdminFlightApiTests(TestCase):
 
     def test_patch_flight(self):
         flight = sample_flight()
+        departure_time = sample_departure_time()
         data = {
-            "departure_time": "2023-12-27 08:26:49.219717",
+            "departure_time": departure_time,
         }
 
         url = get_detail_flight_url(flight_id=flight.id)
@@ -252,12 +247,12 @@ class AdminFlightApiTests(TestCase):
         route = sample_route()
         airplane = sample_airplane()
         flight = sample_flight()
+        departure_time = sample_departure_time()
         data = {
             "route": route.id,
             "airplane": airplane.id,
-            "departure_time": "2022-12-27 08:26:49.219717",
-            "arrival_time": "2022-12-27 08:26:49.219717",
-
+            "departure_time": departure_time,
+            "arrival_time": (departure_time + datetime.timedelta(hours=2)),
         }
         url = get_detail_flight_url(flight_id=flight.id)
         response = self.client.put(url, data)
@@ -276,18 +271,11 @@ class AdminFlightApiTests(TestCase):
         flight = sample_flight()
         meal = Meal.objects.create()
         order = Order.objects.create(user=self.user)
+        created_at = sample_departure_time()
         Ticket.objects.create(
-            row=1,
-            seat=1,
-            flight=flight,
-            order=order,
-            meal=meal,
-            ticket_class="ECONOMY"
+            row=1, seat=1, flight=flight, order=order, meal=meal, ticket_class="ECONOMY"
         )
-        data = {
-            "created_at": "2022-12-27 08:26:49.219717",
-            "user": 1
-        }
+        data = {"created_at": created_at, "user": 1}
 
         url = get_detail_order_url(order.id)
         response = self.client.put(url, data)
@@ -299,12 +287,7 @@ class AdminFlightApiTests(TestCase):
         meal = Meal.objects.create()
         order = Order.objects.create(user=self.user)
         Ticket.objects.create(
-            row=1,
-            seat=1,
-            flight=flight,
-            order=order,
-            meal=meal,
-            ticket_class="ECONOMY"
+            row=1, seat=1, flight=flight, order=order, meal=meal, ticket_class="ECONOMY"
         )
 
         url = get_detail_order_url(order.id)
