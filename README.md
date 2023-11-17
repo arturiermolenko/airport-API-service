@@ -101,7 +101,7 @@ Airport API allows:
 - using [POST] /api/airport/countries/ --- Add new country
 - using [GET] /api/airport/routes/ --- Routes list
 - using [POST] /api/airport/routes/ --- Add new route
-- using [GET] /api/airport/routes/{id}/ --- Detail info aboute route
+- using [GET] /api/airport/routes/{id}/ --- Detail info about route
 ######
 - using [GET] /api/flight/crew-members/ --- Crew members list
 - using [POST] /api/flight/crew-members/ --- Add new crew member
