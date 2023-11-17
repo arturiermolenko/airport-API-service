@@ -2,14 +2,14 @@
 This is API for Airport management system. Based on it, You can create a website with possibilities of viewing flights, routes, airports with its city and country, airplanes with its owner airline company and type of airplane, making your own order with tickets. You can also find out the quantity of available tickets for the flight.
 
 
-# The applicatios has following database structure:
+# The applications have the following database structure:
 ![ScreenShot](/schema.jpg)
 
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get a Airport app up &
-running. With this You will run server with cleane Database.
+A quick introduction of the minimal setup you need to get Airport app up &
+running. With this You will run server with clean Database.
 
 ### Python3 must be already installed!
 
@@ -36,7 +36,7 @@ Uncomment string MEDIA_ROOT = "/vol/web/media" in setting.py
 
 ```shell
 git clone https://github.com/arturiermolenko/airport-API-service
-docker-compose biuld
+docker-compose build
 docker-compose up
 ```
 
@@ -50,8 +50,8 @@ python manage.py loaddata airport_data.json
 - JWT authenticated:
 - Admin panel: /admin/
 - Documentation is located at: </api/doc/swagger/>, </api/doc/redoc/>
-- Create planes with owner airplines and airplane types
-- Creatte airports with in different cities and countries
+- Create planes with owner airplanes and airplane types
+- Create airports with in different cities and countries
 - Create routes from one airport to another
 - Create flights with route, airplane
 - Make Your orders with tickets
@@ -72,8 +72,8 @@ To work with token use:
 Note: Make sure to send Token in api urls in Headers as follows:
 
 - key: Authorization
-
 - value: Bearer @token
+
 
 Airport API allows:
 - using api/admin/ --- Work with admin panel
@@ -101,7 +101,7 @@ Airport API allows:
 - using [POST] /api/airport/countries/ --- Add new country
 - using [GET] /api/airport/routes/ --- Routes list
 - using [POST] /api/airport/routes/ --- Add new route
-- using [GET] /api/airport/routes/{id}/ --- Detail info aboute route
+- using [GET] /api/airport/routes/{id}/ --- Detail info about route
 ######
 - using [GET] /api/flight/crew-members/ --- Crew members list
 - using [POST] /api/flight/crew-members/ --- Add new crew member
